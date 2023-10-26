@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+ 
+    <meta charset="utf-8">
+    <title>Products-Zappy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.15/jspdf.plugin.autotable.min.js"></script>
+    <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid mt-5 mb-5">
+        <h1 class="text-center"><b>Add Your Products Here.</b></h1>
+        <div class="mt-3 mb-3">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header"><b>Product List</b></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <% products.forEach(product => { %>
+                                <div class="col-md-4 mb-5 text-center">
+                                    <img src="data:image/jpeg;base64,<%= product.images.data.toString('base64') %>"  style="width:100px;height:100px;">
+                                    <h4><b><%= product.name %></b></h4>
+                                    <h3 class="text-danger"><%= product.price %></h3>
+                                   
+                                    <form method="post" action="/add_cart">
+                                        <input type="hidden" name="product_id" value="<%= product._id %>" />
+
+                                        <input type="hidden" name="product_name" value="<%= product.name %>" />
+
+                                        <input type="hidden" name="product_price" value="<%= product.price %>" />
+                                        
+                                        
+                                        <input type="submit" class="btn btn-warning" value="Add to Cart" />
+                                        <input type="hidden" name="cart" value="<%= JSON.stringify(cart) %>" /> 
+                                    </form>
+                           
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><b>Shopping Cart</b></div>
+                        <div class="card-body">
+                         
+                                <table class="table" id="table">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th>Remove</th>
+                                    <input type="hidden" name="cart" value="<%= JSON.stringify(cart) %>" /> 
+                                </tr>
+                                <% 
+                                if(cart.length > 0)
+                                {
+                                    let total = 0;
+
+                                     cart.forEach(item => {
+                                %>
+                                <tr>
+                                    
+                                    <td><%= item.name %></td>
+                                    <td><%= item.quantity %></td>
+                                    <td><%= item.price %></td>
+                                    <td><%= parseFloat(item.quantity) * parseFloat(item.price) %></td>
+                                    
+
+<td>
+    <form action="/remove_items/<%= item.product_id %>" method="get">
+      <input type="hidden" name="cart" value="<%= JSON.stringify(cart) %>" />
+      <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+    </form>
+  </td>
+       
+                                        
+                                </tr>
+                                <%
+                                        total += parseFloat(item.quantity) * parseFloat(item.price);
+                                    })
+                                %>
+                                <tr>
+                                    <td colspan="3" aling="right"><b>Total</b></td>
+                                    <td><%= total %></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <%
+                                }
+                                else
+                                {
+                                %>
+
+                                <tr>
+                                    <td colspan="5" align="center">No Item Found in Cart</td>
+                                </tr>
+
+                                <%
+                                }
+                                %>
+                            </table>
+                            <button onclick="generatePDF()" class="btn btn-success">Download PDF</button>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            
+            
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+  function generatePDF() {
+    const doc = new jsPDF();
+
+    const table = document.getElementById("table");
+    const columnsToInclude = [0, 1, 2, 3]; // Indexes of the columns to include in the PDF
+
+    
+    const data = [];
+
+   
+    const headerData = [];
+    for (let i = 0; i < columnsToInclude.length; i++) {
+      const cell = table.rows[0].cells[columnsToInclude[i]];
+      headerData.push(cell ? cell.innerText : ""); 
+    }
+    data.push(headerData);
+
+    
+    for (let i = 1; i < table.rows.length; i++) {
+      const rowData = [];
+      for (let j = 0; j < columnsToInclude.length; j++) {
+        const cell = table.rows[i].cells[columnsToInclude[j]];
+        rowData.push(cell ? cell.innerText : ""); 
+      }
+      data.push(rowData);
+    }
+
+   
+    const columnWidths = [40, 30, 40, 40]; 
+
+    doc.autoTable({
+      head: [data[0]],
+      body: data.slice(1),
+      startY: 20,
+      styles: { overflow: 'linebreak', columnWidth: 'wrap' },
+      columnStyles: {
+        0: { columnWidth: columnWidths[0] },
+        1: { columnWidth: columnWidths[1] },
+        2: { columnWidth: columnWidths[2] },
+        3: { columnWidth: columnWidths[3] }
+      }
+    });
+
+    doc.save("table.pdf");
+  }
+
+
+  function remove_item(productId) {
+    event.preventDefault();
+
+    if (confirm("Are you sure you want to remove it?")) {
+      
+      window.location.href = `/remove_items/${productId}?cart=${JSON.stringify(cart)}`;
+    }
+  }
+
+
+
+</script>

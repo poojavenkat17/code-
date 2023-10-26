@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zappy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,500;1,100;1,700&family=Poppins:ital,wght@0,600;1,300;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<style>@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,500,300,700);
+  button {
+  border: none;
+  display: block;
+  position: relative;
+  left: 10%;
+  top: 20%;
+  padding: 0.7em 2.4em;
+  font-size: 18px;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  color: rgb(150, 5, 89);
+  z-index: 1;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+button span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -2;
+  border: 3px solid rgb(180, 59, 37);
+}
+
+button span::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 9%;
+  height: 500%;
+  background: var(--lightgray);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-60deg);
+  transition: all 0.3s;
+}
+
+button:hover span::before {
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 100%;
+  background: rgb(179, 81, 36);
+}
+
+button:hover {
+  color: white;
+}
+
+button:active span::before {
+  background: rgb(179, 81, 36);
+}
+.row{
+  flex-basis: 50%;
+  width: auto;
+  height: 100px;
+}
+.add{
+  width: 120px;
+  height: 120px;
+  text-align: center;
+}
+.remove{
+  width: 120px;
+  height: 120px;
+  text-align: center;
+}
+a{
+  text-decoration: none;
+}
+
+.main{
+  flex-basis: 25%;
+  text-align: center;
+}
+.container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Coromorant Garmond',serif;
+  font-size: 20px;
+}
+.row{
+  margin: 20px 20px 20px 20px;
+}
+.add{
+  width: 200px;
+  height: 250px;
+  margin-top: 20px important;
+  box-shadow:2px 2px 2px 2px #aaaaaa;
+  align-items: center;
+} 
+.remove{
+  box-shadow: 2px 2px 2px 2px #aaaaaa;
+  align-items: center;
+  height: 250px;
+}
+button{
+  align-items: center;
+}
+.p-{
+  padding-left: 40px;
+}
+</style>
+<body>
+  <div class="container">
+    <div class="add row">
+      <img src="img/add i.jpg" alt="Zappy" width="100px" height="100px">
+      <a href="/imageupload"><button type=""> <i class="fa fa-plus-circle" aria-hidden="true"></i>Add Images
+        <span></span></a>
+      </button>
+    </div>
+    <div class="remove row">
+      <img src="img/remove i.jpg" alt="Zappy" width="100px" height="100px">
+      <a href="/imagedelete"><button type=""><i class="fa fa-minus-circle" aria-hidden="true"></i>Remove Images
+        <span></span></a>
+      </button>
+    </div>
+    <div class="add row">
+      <img src="img/add p.jpg" alt="Zappy" width="100px" height="100px">
+      <a href="/element_add"><button type="" > <i class="fa fa-plus-circle" aria-hidden="true"></i>Add Products
+        <span></span>
+      </button></a>
+    </div>
+    <div class="remove row">
+      <img src="img/remove p.jpg" alt="Zappy" width="100px" height="100px">
+      <a href="/deleteproduct"><button type="" class="p-"><i class="fa fa-minus-circle" aria-hidden="true"></i>Remove Products
+        <span></span></a>
+      </button>
+    </div>
+</div>
+</body>
+</html>
